@@ -51,36 +51,36 @@ class CourseModel {
 // DATA DUMMY 30+ MATA KULIAH
 // -----------------------------------------------------------------------------
 final List<CourseModel> dummyCourses = [
-  CourseModel(id: 'MK01', name: 'Kriptografi & Keamanan Informasi', lecturer: 'Muhammad Safi\'i, S.Kom., M.Kom.', day: 'Senin', time: '08:00 - 10:30', room: 'LAB A', sks: 3),
-  CourseModel(id: 'MK02', name: 'Sistem Manajemen Basis Data', lecturer: 'Nasruddin bin Idris, S.Kom., M.Kom.', day: 'Senin', time: '10:30 - 13:00', room: 'LAB B', sks: 3),
-  CourseModel(id: 'MK03', name: 'Pemrograman Web Lanjut (React & Vite)', lecturer: 'Dr. Ahmad Fauzi, M.T.', day: 'Senin', time: '13:30 - 16:00', room: 'R.301', sks: 3),
-  CourseModel(id: 'MK04', name: 'Desain Pengalaman Pengguna (UI/UX)', lecturer: 'Siti Rahmawati, M.Ds.', day: 'Senin', time: '16:00 - 18:00', room: 'LAB UI', sks: 2),
-  CourseModel(id: 'MK05', name: 'Teknologi Aplikasi Bergerak (Flutter)', lecturer: 'Istia Budi, S.Kom., M.Kom.', day: 'Selasa', time: '08:00 - 10:30', room: 'LAB A', sks: 3),
-  CourseModel(id: 'MK06', name: 'Penalaran Komputer & Logika', lecturer: 'Isa Rosita, S.Kom., M.Kom.', day: 'Selasa', time: '10:30 - 12:30', room: 'A201', sks: 2),
-  CourseModel(id: 'MK07', name: 'Simulasi & Game Komputer', lecturer: 'Horuzulkifli Rowa, S.Kom., M.Kom.', day: 'Selasa', time: '13:30 - 16:00', room: 'LAB A', sks: 3),
-  CourseModel(id: 'MK08', name: 'Kecerdasan Buatan (AI)', lecturer: 'Dr. Budi Santoso, M.T.', day: 'Selasa', time: '16:00 - 18:30', room: 'R.302', sks: 3),
-  CourseModel(id: 'MK09', name: 'Riset Machine Learning', lecturer: 'Rina Wijaya, M.Sc.', day: 'Rabu', time: '08:00 - 10:30', room: 'LAB AI', sks: 3),
-  CourseModel(id: 'MK10', name: 'Jaringan Nirkabel & Mobile', lecturer: 'Maradona, S.Kom., M.Kom.', day: 'Rabu', time: '10:30 - 13:00', room: 'LAB JARINGAN', sks: 3),
-  CourseModel(id: 'MK11', name: 'Penulisan & Publikasi Ilmiah', lecturer: 'Yustiani Servanda, S.Kom., M.Kom.', day: 'Rabu', time: '13:30 - 15:30', room: 'R.204', sks: 2),
-  CourseModel(id: 'MK12', name: 'Cloud Computing & DevOps', lecturer: 'Hendra Pratama, M.T.', day: 'Rabu', time: '15:30 - 18:00', room: 'LAB CLOUD', sks: 3),
-  CourseModel(id: 'MK13', name: 'Keamanan Siber & Pentesting', lecturer: 'Eko Prasetyo, S.Kom., M.T.', day: 'Kamis', time: '08:00 - 10:30', room: 'LAB CYBER', sks: 3),
-  CourseModel(id: 'MK14', name: 'Pengolahan Citra Digital', lecturer: 'Dewi Lestari, M.Kom.', day: 'Kamis', time: '10:30 - 13:00', room: 'LAB C', sks: 3),
-  CourseModel(id: 'MK15', name: 'Interaksi Manusia & Komputer', lecturer: 'Andi Saputra, M.T.', day: 'Kamis', time: '13:30 - 15:30', room: 'R.305', sks: 2),
-  CourseModel(id: 'MK16', name: 'Tata Kelola Teknologi Informasi', lecturer: 'Nurmala, S.E., M.Si.', day: 'Kamis', time: '15:30 - 17:30', room: 'R.102', sks: 2),
-  CourseModel(id: 'MK17', name: 'Internet of Things (IoT)', lecturer: 'Ir. Supriyanto, M.T.', day: 'Jumat', time: '08:00 - 10:30', room: 'LAB IOT', sks: 3),
-  CourseModel(id: 'MK18', name: 'Etika Profesi & Hukum Cyber', lecturer: 'Bambang Sukoco, S.H., M.H.', day: 'Jumat', time: '10:30 - 12:00', room: 'R.101', sks: 2),
-  CourseModel(id: 'MK19', name: 'Big Data & Analytics', lecturer: 'Dr. Retno Wulandari, M.Sc.', day: 'Jumat', time: '13:30 - 16:00', room: 'LAB DATA', sks: 3),
-  CourseModel(id: 'MK20', name: 'Proyek Rekayasa Perangkat Lunak', lecturer: 'Pramudya Prima Insan, S.Kom., M.Kom.', day: 'Jumat', time: '16:00 - 18:30', room: 'LAB A', sks: 3),
-  CourseModel(id: 'MK21', name: 'Pemrograman Terdistribusi', lecturer: 'Fajar Nugroho, M.Kom.', day: 'Senin', time: '08:00 - 10:00', room: 'R.202', sks: 2),
-  CourseModel(id: 'MK22', name: 'Kewirausahaan Teknologi (Technopreneurship)', lecturer: 'Linda Kurnia, M.M.', day: 'Senin', time: '14:00 - 16:00', room: 'A103', sks: 2),
-  CourseModel(id: 'MK23', name: 'Sistem Informasi Geografis (SIG)', lecturer: 'Tri Wahyudi, M.T.', day: 'Selasa', time: '08:00 - 10:00', room: 'LAB SIG', sks: 2),
-  CourseModel(id: 'MK24', name: 'Analisis & Perancangan Sistem', lecturer: 'Kartika Sari, S.Kom., M.Kom.', day: 'Selasa', time: '14:00 - 16:30', room: 'R.304', sks: 3),
-  CourseModel(id: 'MK25', name: 'Pemrograman Backend (Node.js & Go)', lecturer: 'Reza Kurniawan, M.T.', day: 'Rabu', time: '08:00 - 10:30', room: 'LAB WEB', sks: 3),
-  CourseModel(id: 'MK26', name: 'Arsitektur Komputer & Organisasi', lecturer: 'Agus Setiawan, S.T., M.T.', day: 'Rabu', time: '14:00 - 16:00', room: 'R.201', sks: 2),
-  CourseModel(id: 'MK27', name: 'Metodologi Penelitian TI', lecturer: 'Prof. Dr. Ir. Gunawan, M.T.', day: 'Kamis', time: '08:00 - 10:00', room: 'AUDITORIUM', sks: 2),
-  CourseModel(id: 'MK28', name: 'Data Mining & Pola Informasi', lecturer: 'Dr. Indah Permata, M.Sc.', day: 'Kamis', time: '14:00 - 16:30', room: 'LAB DATA', sks: 3),
-  CourseModel(id: 'MK29', name: 'Bahasa Inggris Ilmiah & Presentasi', lecturer: 'Sarah Johnson, M.Pd.', day: 'Jumat', time: '08:00 - 10:00', room: 'R.105', sks: 2),
-  CourseModel(id: 'MK30', name: 'Manajemen Proyek Teknologi Informasi', lecturer: 'Dedi Kurniawan, S.T., M.M.', day: 'Jumat', time: '14:00 - 16:30', room: 'R.302', sks: 3),
+  CourseModel(id: 'MK01', name: 'Kriptografi & Keamanan Informasi', lecturer: 'Muhammad Safi\'i, S.Kom., M.Kom.', day: 'Senin', time: '19:00 - 20:30', room: 'LAB A', sks: 3),
+  CourseModel(id: 'MK02', name: 'Sistem Manajemen Basis Data', lecturer: 'Nasruddin bin Idris, S.Kom., M.Kom.', day: 'Senin', time: '20:30 - 22:00', room: 'LAB B', sks: 3),
+  CourseModel(id: 'MK03', name: 'Pemrograman Web Lanjut (React & Vite)', lecturer: 'Dr. Ahmad Fauzi, M.T.', day: 'Senin', time: '19:00 - 20:30', room: 'R.301', sks: 3),
+  CourseModel(id: 'MK04', name: 'Desain Pengalaman Pengguna (UI/UX)', lecturer: 'Siti Rahmawati, M.Ds.', day: 'Senin', time: '20:30 - 22:00', room: 'LAB UI', sks: 2),
+  CourseModel(id: 'MK05', name: 'Teknologi Aplikasi Bergerak (Flutter)', lecturer: 'Istia Budi, S.Kom., M.Kom.', day: 'Selasa', time: '19:00 - 20:30', room: 'LAB A', sks: 3),
+  CourseModel(id: 'MK06', name: 'Penalaran Komputer & Logika', lecturer: 'Isa Rosita, S.Kom., M.Kom.', day: 'Selasa', time: '20:30 - 22:00', room: 'A201', sks: 2),
+  CourseModel(id: 'MK07', name: 'Simulasi & Game Komputer', lecturer: 'Horuzulkifli Rowa, S.Kom., M.Kom.', day: 'Selasa', time: '19:00 - 20:30', room: 'LAB A', sks: 3),
+  CourseModel(id: 'MK08', name: 'Kecerdasan Buatan (AI)', lecturer: 'Dr. Budi Santoso, M.T.', day: 'Selasa', time: '20:30 - 22:00', room: 'R.302', sks: 3),
+  CourseModel(id: 'MK09', name: 'Riset Machine Learning', lecturer: 'Rina Wijaya, M.Sc.', day: 'Rabu', time: '19:00 - 20:30', room: 'LAB AI', sks: 3),
+  CourseModel(id: 'MK10', name: 'Jaringan Nirkabel & Mobile', lecturer: 'Maradona, S.Kom., M.Kom.', day: 'Rabu', time: '20:30 - 22:00', room: 'LAB JARINGAN', sks: 3),
+  CourseModel(id: 'MK11', name: 'Penulisan & Publikasi Ilmiah', lecturer: 'Yustiani Servanda, S.Kom., M.Kom.', day: 'Rabu', time: '19:00 - 20:30', room: 'R.204', sks: 2),
+  CourseModel(id: 'MK12', name: 'Cloud Computing & DevOps', lecturer: 'Hendra Pratama, M.T.', day: 'Rabu', time: '20:30 - 22:00', room: 'LAB CLOUD', sks: 3),
+  CourseModel(id: 'MK13', name: 'Keamanan Siber & Pentesting', lecturer: 'Eko Prasetyo, S.Kom., M.T.', day: 'Kamis', time: '19:00 - 20:30', room: 'LAB CYBER', sks: 3),
+  CourseModel(id: 'MK14', name: 'Pengolahan Citra Digital', lecturer: 'Dewi Lestari, M.Kom.', day: 'Kamis', time: '20:30 - 22:00', room: 'LAB C', sks: 3),
+  CourseModel(id: 'MK15', name: 'Interaksi Manusia & Komputer', lecturer: 'Andi Saputra, M.T.', day: 'Kamis', time: '19:00 - 20:30', room: 'R.305', sks: 2),
+  CourseModel(id: 'MK16', name: 'Tata Kelola Teknologi Informasi', lecturer: 'Nurmala, S.E., M.Si.', day: 'Kamis', time: '20:30 - 22:00', room: 'R.102', sks: 2),
+  CourseModel(id: 'MK17', name: 'Internet of Things (IoT)', lecturer: 'Ir. Supriyanto, M.T.', day: 'Jumat', time: '19:00 - 20:30', room: 'LAB IOT', sks: 3),
+  CourseModel(id: 'MK18', name: 'Etika Profesi & Hukum Cyber', lecturer: 'Bambang Sukoco, S.H., M.H.', day: 'Jumat', time: '20:30 - 22:00', room: 'R.101', sks: 2),
+  CourseModel(id: 'MK19', name: 'Big Data & Analytics', lecturer: 'Dr. Retno Wulandari, M.Sc.', day: 'Jumat', time: '19:00 - 20:30', room: 'LAB DATA', sks: 3),
+  CourseModel(id: 'MK20', name: 'Proyek Rekayasa Perangkat Lunak', lecturer: 'Pramudya Prima Insan, S.Kom., M.Kom.', day: 'Jumat', time: '20:30 - 22:00', room: 'LAB A', sks: 3),
+  CourseModel(id: 'MK21', name: 'Pemrograman Terdistribusi', lecturer: 'Fajar Nugroho, M.Kom.', day: 'Senin', time: '19:00 - 20:30', room: 'R.202', sks: 2),
+  CourseModel(id: 'MK22', name: 'Kewirausahaan Teknologi (Technopreneurship)', lecturer: 'Linda Kurnia, M.M.', day: 'Senin', time: '20:30 - 22:00', room: 'A103', sks: 2),
+  CourseModel(id: 'MK23', name: 'Sistem Informasi Geografis (SIG)', lecturer: 'Tri Wahyudi, M.T.', day: 'Selasa', time: '19:00 - 20:30', room: 'LAB SIG', sks: 2),
+  CourseModel(id: 'MK24', name: 'Analisis & Perancangan Sistem', lecturer: 'Kartika Sari, S.Kom., M.Kom.', day: 'Selasa', time: '20:30 - 22:00', room: 'R.304', sks: 3),
+  CourseModel(id: 'MK25', name: 'Pemrograman Backend (Node.js & Go)', lecturer: 'Reza Kurniawan, M.T.', day: 'Rabu', time: '19:00 - 20:30', room: 'LAB WEB', sks: 3),
+  CourseModel(id: 'MK26', name: 'Arsitektur Komputer & Organisasi', lecturer: 'Agus Setiawan, S.T., M.T.', day: 'Rabu', time: '20:30 - 22:00', room: 'R.201', sks: 2),
+  CourseModel(id: 'MK27', name: 'Metodologi Penelitian TI', lecturer: 'Prof. Dr. Ir. Gunawan, M.T.', day: 'Kamis', time: '19:00 - 20:30', room: 'AUDITORIUM', sks: 2),
+  CourseModel(id: 'MK28', name: 'Data Mining & Pola Informasi', lecturer: 'Dr. Indah Permata, M.Sc.', day: 'Kamis', time: '20:30 - 22:00', room: 'LAB DATA', sks: 3),
+  CourseModel(id: 'MK29', name: 'Bahasa Inggris Ilmiah & Presentasi', lecturer: 'Sarah Johnson, M.Pd.', day: 'Jumat', time: '19:00 - 20:30', room: 'R.105', sks: 2),
+  CourseModel(id: 'MK30', name: 'Manajemen Proyek Teknologi Informasi', lecturer: 'Dedi Kurniawan, S.T., M.M.', day: 'Jumat', time: '20:30 - 22:00', room: 'R.302', sks: 3),
 ];
 
 // -----------------------------------------------------------------------------
@@ -160,7 +160,7 @@ class _MainPageState extends State<MainPage> {
           onTap: (index) => setState(() => _currentIndex = index),
           backgroundColor: const Color(0xFFEAE1D3),
           selectedItemColor: const Color(0xFFC84B31),
-          unselectedItemColor: const Color(0xFF2B1B17).withValues(alpha: 0.6),
+          unselectedItemColor: const Color(0xFF2B1B17).withOpacity(0.6),
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           items: const [
             BottomNavigationBarItem(
@@ -188,7 +188,11 @@ class DashboardTab extends StatelessWidget {
 
   Future<void> _openGoogleDriveVideo() async {
     final Uri url = Uri.parse('https://drive.google.com/file/d/1B9FUdQsjVJ7PogBrDVg4p6R5BA7xiDla/view?t=90.418');
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    if (!await launchUrl(
+      url, 
+      mode: LaunchMode.externalApplication,
+      webOnlyWindowName: '_blank',
+    )) {
       debugPrint('Tidak dapat membuka URL: $url');
     }
   }
@@ -236,7 +240,7 @@ class DashboardTab extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         'Teknik Informatika • Semester 5',
-                        style: TextStyle(fontSize: 12, color: const Color(0xFF2B1B17).withValues(alpha: 0.7)),
+                        style: TextStyle(fontSize: 12, color: const Color(0xFF2B1B17).withOpacity(0.7)),
                       ),
                     ],
                   ),
@@ -275,7 +279,7 @@ class DashboardTab extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Tonton video dokumentasi dan identitas proyek secara langsung di Google Drive.',
-                  style: TextStyle(fontSize: 12, color: const Color(0xFF2B1B17).withValues(alpha: 0.8)),
+                  style: TextStyle(fontSize: 12, color: const Color(0xFF2B1B17).withOpacity(0.8)),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton.icon(
@@ -405,7 +409,7 @@ class DashboardTab extends StatelessWidget {
                                 const SizedBox(height: 2),
                                 Text(
                                   '${course.time} • ${course.room} • ${course.lecturer}',
-                                  style: TextStyle(fontSize: 11, color: const Color(0xFF2B1B17).withValues(alpha: 0.7)),
+                                  style: TextStyle(fontSize: 11, color: const Color(0xFF2B1B17).withOpacity(0.7)),
                                 ),
                               ],
                             ),
@@ -500,7 +504,7 @@ class KrsSelectionTab extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                   side: BorderSide(
-                    color: isSelected ? const Color(0xFFC84B31) : const Color(0xFF2B1B17).withValues(alpha: 0.3),
+                    color: isSelected ? const Color(0xFFC84B31) : const Color(0xFF2B1B17).withOpacity(0.3),
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -521,7 +525,7 @@ class KrsSelectionTab extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       '${course.day}, ${course.time} • ${course.room}\nDosen: ${course.lecturer}',
-                      style: TextStyle(fontSize: 11, color: const Color(0xFF2B1B17).withValues(alpha: 0.7)),
+                      style: TextStyle(fontSize: 11, color: const Color(0xFF2B1B17).withOpacity(0.7)),
                     ),
                   ),
                   secondary: Container(
