@@ -1,0 +1,1066 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart';
+
+// ─── Theme Notifier ────────────────────────────────────────────────────────────
+final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (_, ThemeMode currentMode, __) {
+        return MaterialApp(
+          title: 'Digital Identity',
+          debugShowCheckedModeBanner: false,
+          themeMode: currentMode,
+          // Tema Terang - Beige & Dark Brown
+          theme: ThemeData.light().copyWith(
+            scaffoldBackgroundColor: const Color(0xFFFAF9F6),
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF2D2A26),
+              secondary: Color(0xFFE8D5C4),
+              surface: Colors.white,
+              onSurface: Color(0xFF2D2A26),
+              onSurfaceVariant: Color(0xFF737373),
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFFFAF9F6),
+              foregroundColor: Color(0xFF2D2A26),
+              elevation: 0,
+            ),
+            dividerColor: const Color(0xFF2D2A26).withOpacity(0.1),
+          ),
+          // Tema Gelap - Dark & Muted Beige
+          darkTheme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: const Color(0xFF121212),
+            colorScheme: const ColorScheme.dark(
+              primary: Color(0xFFE8D5C4),
+              secondary: Color(0xFF3A3530),
+              surface: Color(0xFF1E1E1E),
+              onSurface: Color(0xFFF5F5F5),
+              onSurfaceVariant: Color(0xFFA0A0A0),
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF121212),
+              foregroundColor: Color(0xFFE8D5C4),
+              elevation: 0,
+            ),
+            dividerColor: Colors.white.withOpacity(0.1),
+          ),
+          home: const ElegantPortfolioPage(),
+        );
+      },
+    );
+  }
+}
+
+// ─── Data Profile ────────────────────────────────────────────────────────────
+class ProfileData {
+  static const String name = 'Bilal Shabirin';
+  static const String role = 'Web Developer & UI/UX Designer';
+  static const String nim = 'NIM 2511095';
+  static const String prodi = 'S1 Informatika - IFB5J';
+  static const String universitas = 'Universitas Mulia Balikpapan';
+  static const String email = 'bilalbpp104@gmail.com';
+  static const String phone = '+62 821 4876 2020';
+  static const String linkedin = 'linkedin.com/in/bilal';
+  static const String github = 'github.com/bilal';
+  
+  static const String videoPath = 'assets/videos/Video_Identity_App.mp4';
+  static const String imagePath = 'assets/images/20250504_171743.jpg';
+
+  static const String aboutDesc =
+      'Saya adalah Mahasiswa di Jurusan Informatika Universitas Mulia. Saya suka merancang antarmuka yang modern, responsif, dan mudah digunakan. Di aplikasi ini, saya telah membuat mini identity app menggunakan Toolkit UI Flutter, lengkap dengan video perkenalan diri dan fitur penjadwalan KRS.';
+  static const String aboutQuote = '"Design is not just what it looks like, but how it works."\n— Steve Jobs';
+
+  static final List<Map<String, dynamic>> topSkills = [
+    {'name': 'Flutter & Dart', 'level': 0.90},
+    {'name': 'React Native & Expo', 'level': 0.85},
+    {'name': 'PHP MVC & Supabase', 'level': 0.80},
+    {'name': 'UI/UX Design', 'level': 0.75},
+  ];
+
+  static const List<String> otherSkills = [
+    'ESP32', 'IoT', 'AI / NLP', 'Grafika Komputer', 'Multimedia', 'Laragon', 'Git',
+  ];
+}
+
+// ─── Data Model Jadwal Kuliah ────────────────────────────────────────────────
+class CourseModel {
+  final String day, time, code, name, className, room, lecturer, shift;
+  final int sks;
+
+  CourseModel({
+    required this.day, required this.time, required this.code, required this.name,
+    required this.sks, required this.className, required this.room,
+    required this.lecturer, required this.shift
+  });
+}
+
+final List<CourseModel> dummyCourses = [
+  CourseModel(day: 'Senin', time: '19:00 - 20:30', code: '111500', name: 'SISTEM MANAJEMEN BASIS DATA', sks: 3, className: 'IFB5J', room: 'LAB B (FIKOM)', lecturer: 'NASRUDDIN BIN IDRIS, S.Kom., M.Kom.', shift: 'Malam'),
+  CourseModel(day: 'Senin', time: '20:30 - 22:00', code: '111600', name: 'TEKNOLOGI APLIKASI BERGERAK', sks: 3, className: 'IFB5J', room: 'LAB A (FIKOM)', lecturer: 'ISTIA BUDI, S.T., M.M.', shift: 'Malam'),
+  CourseModel(day: 'Selasa', time: '19:00 - 20:30', code: '111100', name: 'PENALARAN KOMPUTER', sks: 3, className: 'IFB5J', room: 'A201', lecturer: 'ISA ROSITA, S.Kom., M.Cs.', shift: 'Malam'),
+  CourseModel(day: 'Selasa', time: '20:30 - 22:00', code: '111400', name: 'SIMULASI DAN GAME KOMPUTER', sks: 3, className: 'IFB5J', room: 'LAB A (FIKOM)', lecturer: 'HERUZULKIFLI ROWA, S.Kom, M.Kom', shift: 'Malam'),
+  CourseModel(day: 'Rabu', time: '20:30 - 22:00', code: '110700', name: 'KRIPTOGRAFI', sks: 3, className: 'IFB5J', room: 'A301', lecturer: "MUHAMMAD SAFI'I, S.Kom., M.Kom.", shift: 'Malam'),
+  CourseModel(day: 'Kamis', time: '19:00 - 20:30', code: '000800', name: 'PENULISAN DAN PUBLIKASI ILMIAH', sks: 2, className: 'IFB5J', room: 'A203', lecturer: 'YUSTIAN SERVANDA, S.Kom., M.Kom.', shift: 'Malam'),
+  CourseModel(day: 'Jumat', time: '19:00 - 20:30', code: '110600', name: 'JARINGAN NIRKABEL', sks: 3, className: 'IFB5J', room: 'LAB JARINGAN (FIKOM)', lecturer: 'MARADONA, S.Kom., M.Kom.', shift: 'Malam'),
+  CourseModel(day: 'Jumat', time: '20:30 - 22:00', code: '111000', name: 'PEMROGRAMAN APLIKASI BERGERAK', sks: 3, className: 'IFB5J', room: 'LAB A (FIKOM)', lecturer: 'PRAMUDYA PRIMA INSAN, S.Kom., M.Kom.', shift: 'Malam'),
+];
+
+// ─── Main Portfolio Page ───────────────────────────────────────────────────────
+class ElegantPortfolioPage extends StatelessWidget {
+  const ElegantPortfolioPage({super.key});
+
+  void _openLink(BuildContext context, String info, String label) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.bold)),
+        content: Text(info, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 14)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('Tutup', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
+          TextButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: info));
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$label disalin!'), backgroundColor: Theme.of(context).colorScheme.primary));
+            },
+            child: Text('Salin', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openKrsEntry(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const KrsSelectionPage()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 20,
+        title: Row(
+          children: [
+            Text('BS', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22, color: theme.colorScheme.primary)),
+            const SizedBox(width: 8),
+            Text(ProfileData.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: theme.colorScheme.onSurface)),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode, size: 20),
+            onPressed: () => themeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0, left: 4.0),
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.surface,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              ),
+              onPressed: () => _openKrsEntry(context), 
+              icon: const Icon(Icons.assignment_outlined, size: 14),
+              label: const Text('Entri KRS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+            ),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 12),
+            _buildHeroSection(context, isDark),
+            const SizedBox(height: 20),
+            _buildContactRow(context),
+            const SizedBox(height: 24),
+            _buildAboutSection(context, isDark),
+            const SizedBox(height: 24),
+            _buildSkillsSection(context),
+            const SizedBox(height: 32),
+            _buildCTASection(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      child: Row(
+        children: [
+          Container(width: 20, height: 2, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 8),
+          Text(title, style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2, fontSize: 12, color: Theme.of(context).colorScheme.onSurface)),
+        ],
+      ),
+    );
+  }
+
+  // ─── HERO SECTION ───
+  Widget _buildHeroSection(BuildContext context, bool isDark) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final bool isLargePage = constraints.maxWidth > 500;
+
+          Widget profileImageWidget = Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                width: isLargePage ? 140 : 115,
+                height: isLargePage ? 140 : 115,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isDark ? const Color(0xFF3A3530) : const Color(0xFFF3E5D8),
+                  border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3), width: 3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    ProfileData.imagePath,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.person,
+                      size: isLargePage ? 70 : 55,
+                      color: theme.colorScheme.primary.withOpacity(0.3),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.dividerColor),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4)],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+                      const SizedBox(width: 4),
+                      Text('Available Work', style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+
+          Widget textSectionWidget = Column(
+            crossAxisAlignment: isLargePage ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(width: 14, height: 1, color: theme.colorScheme.onSurfaceVariant),
+                  const SizedBox(width: 6),
+                  Text('HELLO, I\'M', style: TextStyle(letterSpacing: 1.5, fontSize: 10, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurfaceVariant)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                ProfileData.name,
+                textAlign: isLargePage ? TextAlign.center : TextAlign.start,
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, height: 1.1, color: theme.colorScheme.onSurface),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                ProfileData.role,
+                textAlign: isLargePage ? TextAlign.center : TextAlign.start,
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 12),
+              
+              Wrap(
+                spacing: 6, runSpacing: 6,
+                alignment: isLargePage ? WrapAlignment.center : WrapAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(color: theme.colorScheme.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                    child: Text(ProfileData.nim, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(color: theme.colorScheme.secondary.withOpacity(0.5), borderRadius: BorderRadius.circular(12)),
+                    child: Text(ProfileData.prodi, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.surface,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                ),
+                onPressed: () => _openKrsEntry(context),
+                child: const Text('Atur Jadwal KRS \u2192', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          );
+
+          if (isLargePage) {
+            return Center(
+              child: Column(
+                children: [
+                  profileImageWidget,
+                  const SizedBox(height: 16),
+                  textSectionWidget,
+                ],
+              ),
+            );
+          } else {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(flex: 3, child: textSectionWidget),
+                const SizedBox(width: 12),
+                profileImageWidget,
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  // ─── CONTACT LINKS ───
+  Widget _buildContactRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _ContactIcon(icon: Icons.email_outlined, label: 'Email', onTap: () => _openLink(context, ProfileData.email, 'Email')),
+          _ContactIcon(icon: Icons.phone_outlined, label: 'Phone', onTap: () => _openLink(context, ProfileData.phone, 'Phone')),
+          _ContactIcon(icon: Icons.link, label: 'LinkedIn', onTap: () => _openLink(context, 'https://${ProfileData.linkedin}', 'LinkedIn')),
+          _ContactIcon(icon: Icons.code, label: 'GitHub', onTap: () => _openLink(context, 'https://${ProfileData.github}', 'GitHub')),
+        ],
+      ),
+    );
+  }
+
+  // ─── ABOUT SECTION ───
+  Widget _buildAboutSection(BuildContext context, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle(context, 'ABOUT ME'),
+          const SizedBox(height: 8),
+          Text(ProfileData.aboutDesc, style: TextStyle(fontSize: 13, height: 1.5, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          const SizedBox(height: 16),
+          _VideoThumbnail(onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const VideoPlayerPage()))),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border(left: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 3)),
+            ),
+            child: Text(ProfileData.aboutQuote, style: TextStyle(fontStyle: FontStyle.italic, fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
+          )
+        ],
+      ),
+    );
+  }
+
+  // ─── SKILLS SECTION ───
+  Widget _buildSkillsSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle(context, 'MY SKILLS'),
+          const SizedBox(height: 12),
+          ...ProfileData.topSkills.map((skill) => Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(skill['name'], style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
+                    Text('${(skill['level'] * 100).toInt()}%', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                LinearProgressIndicator(
+                  value: skill['level'],
+                  backgroundColor: Theme.of(context).dividerColor,
+                  color: const Color(0xFF9E7E65),
+                  minHeight: 6,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ],
+            ),
+          )),
+          const SizedBox(height: 12),
+          Text('Other Tools & Technologies:', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6, runSpacing: 6,
+            children: ProfileData.otherSkills.map((s) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Theme.of(context).dividerColor),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(s, style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface)),
+            )).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── CTA SECTION ───
+  Widget _buildCTASection(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(28),
+      decoration: const BoxDecoration(
+        color: Color(0xFF1E1E1E), 
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(width: 16, height: 1, color: const Color(0xFFA0A0A0)),
+              const SizedBox(width: 6),
+              const Text('UNIVERSITAS MULIA', style: TextStyle(letterSpacing: 1.2, fontSize: 9, color: Color(0xFFA0A0A0), fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Text('Siap Memulai Semester Ini?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, height: 1.2)),
+          const SizedBox(height: 8),
+          const Text('Atur jadwal kuliahmu dan pilih mata kuliah sesuai SKS yang tersedia.', style: TextStyle(fontSize: 12, color: Colors.white70)),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE8D5C4),
+              foregroundColor: const Color(0xFF1E1E1E),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            ),
+            onPressed: () => _openKrsEntry(context),
+            child: const Text('Buat Jadwal Sekarang \u2192', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Reusable Widgets ─────────────────────────────────────────────────────────
+
+class _ContactIcon extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const _ContactIcon({required this.icon, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(children: [
+        Container(
+          width: 44, height: 44,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Theme.of(context).dividerColor),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6)],
+          ),
+          child: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: 6),
+        Text(label, style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600)),
+      ]),
+    );
+  }
+}
+
+class _VideoThumbnail extends StatefulWidget {
+  final VoidCallback onTap;
+  const _VideoThumbnail({required this.onTap});
+  @override
+  State<_VideoThumbnail> createState() => _VideoThumbnailState();
+}
+
+class _VideoThumbnailState extends State<_VideoThumbnail> {
+  late VideoPlayerController _controller;
+  bool _isReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset(ProfileData.videoPath)
+      ..initialize().then((_) {
+        _controller.seekTo(Duration.zero);
+        if (mounted) setState(() => _isReady = true);
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: SizedBox(
+          height: 160,
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              _isReady
+                  ? SizedBox.expand(
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: _controller.value.size.width,
+                          height: _controller.value.size.height,
+                          child: VideoPlayer(_controller),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      color: Theme.of(context).colorScheme.surface,
+                      child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary, strokeWidth: 2)),
+                    ),
+              Container(color: Colors.black.withOpacity(0.3)),
+              Container(
+                width: 50, height: 50,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.85),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+                ),
+                child: Icon(Icons.play_arrow_rounded, color: Theme.of(context).colorScheme.primary, size: 30),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class VideoPlayerPage extends StatefulWidget {
+  const VideoPlayerPage({super.key});
+  @override
+  State<VideoPlayerPage> createState() => _VideoPlayerPageState();
+}
+
+class _VideoPlayerPageState extends State<VideoPlayerPage> {
+  late VideoPlayerController _controller;
+  bool _isInitialized = false;
+  bool _showControls = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset(ProfileData.videoPath)
+      ..initialize().then((_) {
+        setState(() => _isInitialized = true);
+        _controller.play();
+      });
+    _controller.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String _formatDuration(Duration d) {
+    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$m:$s';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
+        title: const Text('Video Perkenalan', style: TextStyle(color: Colors.white, fontSize: 15)),
+      ),
+      body: Center(
+        child: _isInitialized
+            ? GestureDetector(
+                onTap: () => setState(() => _showControls = !_showControls),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AspectRatio(aspectRatio: _controller.value.aspectRatio, child: VideoPlayer(_controller)),
+                    if (_showControls)
+                      Container(
+                        color: Colors.black.withOpacity(0.4),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              iconSize: 50,
+                              icon: Icon(_controller.value.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled, color: Colors.white),
+                              onPressed: () => setState(() { _controller.value.isPlaying ? _controller.pause() : _controller.play(); }),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              child: Row(
+                                children: [
+                                  Text(_formatDuration(_controller.value.position), style: const TextStyle(color: Colors.white, fontSize: 11)),
+                                  Expanded(
+                                    child: VideoProgressIndicator(
+                                      _controller, allowScrubbing: true, padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      colors: const VideoProgressColors(playedColor: Color(0xFFE8D5C4), bufferedColor: Colors.white30, backgroundColor: Colors.white10),
+                                    ),
+                                  ),
+                                  Text(_formatDuration(_controller.value.duration), style: const TextStyle(color: Colors.white, fontSize: 11)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              )
+            : const CircularProgressIndicator(color: Color(0xFFE8D5C4)),
+      ),
+    );
+  }
+}
+
+// ─── HALAMAN KRS SELECTION ──────────────────────────────────────────────────
+class KrsSelectionPage extends StatefulWidget {
+  const KrsSelectionPage({super.key});
+  @override
+  State<KrsSelectionPage> createState() => _KrsSelectionPageState();
+}
+
+class _KrsSelectionPageState extends State<KrsSelectionPage> {
+  String _selectedShift = 'Malam';
+  final List<CourseModel> _selectedCourses = [];
+
+  int get _totalSKS => _selectedCourses.fold(0, (sum, item) => sum + item.sks);
+
+  void _toggleCourse(CourseModel course, bool? value) {
+    setState(() {
+      if (value == true) {
+        if (_totalSKS + course.sks <= 23) {
+          _selectedCourses.add(course);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Batas maksimal 23 SKS!'), backgroundColor: Colors.redAccent));
+        }
+      } else {
+        _selectedCourses.remove(course);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final availableCourses = dummyCourses.where((c) => c.shift == _selectedShift).toList();
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Entri KRS', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Pilih Shift Kelas:', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.bold)),
+                DropdownButton<String>(
+                  value: _selectedShift,
+                  dropdownColor: Theme.of(context).colorScheme.surface,
+                  style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 14),
+                  underline: const SizedBox(),
+                  items: ['Pagi', 'Malam'].map((String value) => DropdownMenuItem<String>(value: value, child: Text(value))).toList(),
+                  onChanged: (newValue) => setState(() { _selectedShift = newValue!; _selectedCourses.clear(); }),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Daftar Mata Kuliah', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13, fontWeight: FontWeight.bold)),
+                Text('Total: $_totalSKS / 23 SKS', style: TextStyle(color: _totalSKS == 23 ? Colors.green : Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 14)),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: availableCourses.length,
+              itemBuilder: (context, index) {
+                final course = availableCourses[index];
+                final isSelected = _selectedCourses.contains(course);
+                final isDisabled = !isSelected && (_totalSKS + course.sks > 23);
+
+                return Card(
+                  color: Theme.of(context).colorScheme.surface,
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).dividerColor)),
+                  child: CheckboxListTile(
+                    activeColor: Theme.of(context).colorScheme.primary,
+                    checkColor: Theme.of(context).colorScheme.surface,
+                    enabled: !isDisabled,
+                    title: Text(course.name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.bold)),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${course.sks} SKS | Kelas: ${course.className}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11)),
+                          Text('${course.day}, ${course.time}', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
+                          Text('Ruang: ${course.room}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11)),
+                        ],
+                      ),
+                    ),
+                    value: isSelected,
+                    onChanged: (val) => _toggleCourse(course, val),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.surface,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            ),
+            onPressed: _selectedCourses.isEmpty ? null : () => Navigator.push(context, MaterialPageRoute(builder: (_) => ScheduleResultPage(selectedCourses: _selectedCourses))),
+            child: const Text('Buat Jadwal', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── HALAMAN HASIL JADWAL (SERASI BEIGE & WARM TONE TOTAL) ───────────────────
+class ScheduleResultPage extends StatelessWidget {
+  final List<CourseModel> selectedCourses;
+  const ScheduleResultPage({super.key, required this.selectedCourses});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Palet Warna Beige & Warm Earth Tone
+    final Color beigeBg = isDark ? const Color(0xFF121212) : const Color(0xFFFAF9F6);
+    final Color cardBg = isDark ? const Color(0xFF1E1E1E) : const Color(0xFFFFFFFF);
+    final Color beigePrimary = isDark ? const Color(0xFFE8D5C4) : const Color(0xFF8C6D58);
+    final Color beigeContainer = isDark ? const Color(0xFF3A3530) : const Color(0xFFF3E5D8);
+    final Color textPrimary = isDark ? const Color(0xFFF5F5F5) : const Color(0xFF2D2A26);
+    final Color textSecondary = isDark ? const Color(0xFFA0A0A0) : const Color(0xFF737373);
+    final Color borderBeige = isDark ? const Color(0xFF2D2A26) : const Color(0xFFE8D5C4);
+
+    // Grouping berdasarkan hari
+    Map<String, List<CourseModel>> groupedCourses = {
+      'Senin': [], 'Selasa': [], 'Rabu': [], 'Kamis': [], 'Jumat': [], 'Sabtu': []
+    };
+    for (var course in selectedCourses) {
+      if (groupedCourses.containsKey(course.day)) {
+        groupedCourses[course.day]!.add(course);
+      }
+    }
+    groupedCourses.forEach((key, value) {
+      value.sort((a, b) => a.time.compareTo(b.time));
+    });
+
+    int totalSKS = selectedCourses.fold(0, (sum, item) => sum + item.sks);
+
+    return Scaffold(
+      backgroundColor: beigeBg,
+      appBar: AppBar(
+        backgroundColor: beigeBg,
+        elevation: 0,
+        leading: TextButton.icon(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios_new, size: 14, color: beigePrimary),
+          label: Text('Notes', style: TextStyle(color: beigePrimary, fontWeight: FontWeight.bold, fontSize: 14)),
+        ),
+        leadingWidth: 100,
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        child: Column(
+          children: [
+            // ─── HEADER TITLE ───
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    'JADWAL KULIAH',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.5,
+                      color: textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: beigeContainer,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: borderBeige),
+                    ),
+                    child: Text(
+                      'SEMESTER GANJIL',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: beigePrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // ─── LIST JADWAL PER HARI (BEIGE TONE) ───
+            ...groupedCourses.entries.where((e) => e.value.isNotEmpty).map((entry) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Badge Hari (Warm Earth Tone - Serasi tanpa warna-warni)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: beigePrimary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        entry.key.toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Item Mata Kuliah
+                    ...entry.value.map((course) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: cardBg,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: borderBeige.withOpacity(0.6)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(isDark ? 0.2 : 0.03),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Waktu
+                            Row(
+                              children: [
+                                Icon(Icons.access_time_rounded, size: 14, color: textSecondary),
+                                const SizedBox(width: 4),
+                                Text(
+                                  course.time,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 12),
+                            
+                            // Pemisah Bulat Beige
+                            Container(
+                              margin: const EdgeInsets.only(top: 4),
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: beigePrimary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+
+                            // Detail Mata Kuliah & Dosen
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${course.code} - ${course.name} (${course.className})',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: textPrimary,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    course.lecturer,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            // Badge SKS (Beige Soft Chip)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: beigeContainer,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: borderBeige),
+                              ),
+                              child: Text(
+                                '${course.sks} SKS',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: beigePrimary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+
+                    Divider(color: borderBeige.withOpacity(0.4), height: 24),
+                  ],
+                ),
+              );
+            }),
+
+            const SizedBox(height: 16),
+
+            // ─── TOTAL SKS BADGE (BEIGE SHADOW CARD) ───
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: borderBeige, width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.layers_outlined, size: 18, color: beigePrimary),
+                    const SizedBox(width: 8),
+                    Text(
+                      'TOTAL  $totalSKS SKS',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14,
+                        letterSpacing: 1,
+                        color: textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+}
